@@ -1,0 +1,18 @@
+.rating {
+    cursor: pointer;
+  }
+  
+  .star {
+    font-size: 2rem; /* Taille des étoiles */
+    color: #ddd; /* Couleur des étoiles vides */
+    transition: color 0.3s;
+  }
+  
+  .star.filled {
+    color: #ffc107; /* Jaune pour étoiles sélectionnées */
+  }
+  
+  .star:hover {
+    color: #ffca28; /* Jaune clair lors du survol */
+  }
+  

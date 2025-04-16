@@ -1,0 +1,44 @@
+<h2>Ajouter un post</h2>
+
+<!-- Bouton pour afficher/masquer le formulaire -->
+<button (click)="toggleForm()">
+  {{ showForm ? 'Masquer le formulaire' : 'Ajouter un post' }}
+</button>
+
+<!-- Formulaire d'ajout de post -->
+<form *ngIf="showForm" [formGroup]="postForm" (ngSubmit)="addPost()" class="post-form">
+  <!-- Champ titre -->
+  <div>
+    <label for="titre">Titre :</label>
+    <input id="titre" formControlName="titre" type="text" required>
+    <div *ngIf="postForm.get('titre')?.invalid && postForm.get('titre')?.touched">
+      Le titre est obligatoire.
+    </div>
+  </div>
+
+  <!-- Champ contenu -->
+  <div>
+    <label for="content">Contenu :</label>
+    <textarea id="content" formControlName="content" required></textarea>
+    <div *ngIf="postForm.get('content')?.invalid && postForm.get('content')?.touched">
+      Le contenu est obligatoire.
+    </div>
+  </div>
+
+  <!-- Champ URL de l'image -->
+  <div>
+    <label for="imageUrl">URL de l'image :</label>
+    <input id="imageUrl" formControlName="imageUrl" type="url">
+  </div>
+
+  <!-- Champ lien externe -->
+  <div>
+    <label for="link">Lien externe :</label>
+    <input id="link" formControlName="link" type="url">
+  </div>
+
+  <!-- Champ approbation -->
+ 
+  <!-- Bouton de soumission -->
+  <button type="submit" [disabled]="postForm.invalid">Enregistrer</button>
+</form>

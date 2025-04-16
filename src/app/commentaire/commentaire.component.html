@@ -1,0 +1,16 @@
+<div class="commentaire-container">
+    <h3>Ajouter un commentaire</h3>
+    
+    <textarea [(ngModel)]="content" placeholder="Écrivez votre commentaire..." rows="4"></textarea>
+    
+    <button (click)="addComment()" class="btn btn-primary mt-2">Envoyer</button>
+    
+    <h4>Commentaires</h4>
+    <div *ngFor="let comment of comments">
+      <div class="comment">
+        <p>{{ comment.content }}</p>
+        <small>{{ comment.timestamp | date: 'medium' }}</small>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,75 @@
+<h2 class="mb-3 text-center">✏️ Modifier le post</h2>
+
+<form [formGroup]="postForm" (ngSubmit)="updatePost()" novalidate>
+  <!-- Titre du post -->
+  <div class="mb-3">
+    <label for="titre" class="form-label fw-bold">Titre :</label>
+    <input
+      id="titre"
+      class="form-control"
+      formControlName="titre"
+      type="text"
+      placeholder="Titre du post"
+    />
+    <div *ngIf="postForm.get('titre')?.invalid && postForm.get('titre')?.touched" class="text-danger">
+      ⚠️ Le titre est obligatoire.
+    </div>
+  </div>
+
+  <!-- Contenu -->
+  <div class="mb-3">
+    <label for="content" class="form-label fw-bold">Contenu :</label>
+    <textarea
+      id="content"
+      class="form-control"
+      formControlName="content"
+      rows="4"
+      placeholder="Contenu du post"
+    ></textarea>
+    <div *ngIf="postForm.get('content')?.invalid && postForm.get('content')?.touched" class="text-danger">
+      ⚠️ Le contenu est obligatoire.
+    </div>
+  </div>
+
+  <!-- Image -->
+  <div class="mb-3">
+    <label for="imageUrl" class="form-label fw-bold">URL de l'image :</label>
+    <input
+      id="imageUrl"
+      class="form-control"
+      formControlName="imageUrl"
+      type="url"
+      placeholder="http://..."
+    />
+  </div>
+
+  <!-- Lien -->
+  <div class="mb-3">
+    <label for="link" class="form-label fw-bold">Lien externe :</label>
+    <input
+      id="link"
+      class="form-control"
+      formControlName="link"
+      type="url"
+      placeholder="http://..."
+    />
+  </div>
+
+  <!-- Approuvé -->
+  <div class="form-check mb-4">
+    <input
+      id="isApproved"
+      class="form-check-input"
+      formControlName="isApproved"
+      type="checkbox"
+    />
+    <label for="isApproved" class="form-check-label fw-bold">✅ Approuvé</label>
+  </div>
+
+  <!-- Bouton de soumission -->
+  <div class="d-grid">
+    <button class="btn btn-success" type="submit" [disabled]="postForm.invalid">
+      💾 Mettre à jour le post
+    </button>
+  </div>
+</form>

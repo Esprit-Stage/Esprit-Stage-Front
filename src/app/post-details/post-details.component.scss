@@ -1,0 +1,7 @@
+.card-body img {
+    max-width: 100%; /* Limite la largeur de l'image à 100% de son conteneur */
+    height: auto;    /* Ajuste la hauteur proportionnellement */
+    max-height: 400px; /* Limite la hauteur maximale de l'image */
+    object-fit: cover; /* Couvre le conteneur sans déformer l'image */
+  }
+  

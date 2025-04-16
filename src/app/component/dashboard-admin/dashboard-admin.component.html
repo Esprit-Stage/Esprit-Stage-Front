@@ -1,0 +1,124 @@
+<div class="dashboard-container">
+  <h2>🛠️ Admin Dashboard - Post Management</h2>
+
+  <!-- Filter Buttons -->
+  <div class="filter-buttons">
+    <button 
+      [class.active]="currentFilter === 'all'"
+      (click)="loadPosts('all')">
+      All Posts
+    </button>
+    <button 
+      [class.active]="currentFilter === 'pending'"
+      (click)="loadPosts('pending')">
+      Pending Approval
+    </button>
+    <button 
+      [class.active]="currentFilter === 'accepted'"
+      (click)="loadPosts('accepted')">
+      Accepted Posts
+    </button>
+    <button 
+      [class.active]="currentFilter === 'refused'"
+      (click)="loadPosts('refused')">
+      Refused Posts
+    </button>
+  </div>
+
+  <!-- Statistics Section -->
+  <div class="statistics-section">
+    <div class="chart-container">
+      <h3>📊 Post Engagement Statistics</h3>
+      <div *ngIf="posts.length > 0; else noPosts">
+        <canvas 
+          baseChart
+          [data]="barChartData"
+          [options]="barChartOptions"
+          [type]="barChartType">
+        </canvas>
+      </div>
+      <ng-template #noPosts>
+        <p class="no-data">No posts available to display statistics.</p>
+      </ng-template>
+    </div>
+
+    <div class="summary-cards">
+      <div class="summary-card">
+        <div class="card-icon">👍</div>
+        <div class="card-content">
+          <h4>Total Likes</h4>
+          <p>{{ getTotalLikes() }}</p>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="card-icon">👎</div>
+        <div class="card-content">
+          <h4>Total Dislikes</h4>
+          <p>{{ getTotalDislikes() }}</p>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="card-icon">📝</div>
+        <div class="card-content">
+          <h4>Total Posts</h4>
+          <p>{{ posts.length }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Posts Table -->
+  <div class="table-container">
+    <h3>📋 {{ currentFilter === 'all' ? 'All' : currentFilter | titlecase }} Posts</h3>
+    <table class="post-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Content</th>
+           <th>👍 Likes</th>
+          <th>👎 Dislikes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let post of posts">
+          <td>{{ post.id  }}</td>
+          <td>{{ post.titre }}</td>
+          <td>
+            <div class="post-content">
+              <ng-container *ngIf="expandedPostId !== post.id; else fullContent">
+                {{ post.content | slice:0:100 }}...
+                <a href="#" (click)="toggleContent(post.id); $event.preventDefault()">Read more</a>
+              </ng-container>
+              <ng-template #fullContent>
+                {{ post.content }}
+                <a href="#" (click)="toggleContent(post.id); $event.preventDefault()">Show less</a>
+              </ng-template>
+            </div>
+          </td>
+          
+          <td>{{ post.likeCount }}</td>
+          <td>{{ post.dislikeCount }}</td>
+          <td class="actions">
+            
+           
+            <button   (click)="acceptPost(post.id)" class="action-btn accept-btn">
+              ✓ Accept 
+            </button>
+            <button   (click)="refusePost(post.id)" class="action-btn refuse-btn">
+              ✗ Refuse
+            </button>
+            
+            <button class="action-btn edit-btn" (click)="editPost(post.id)">✏️ Edit</button>
+            <button class="action-btn delete-btn" (click)="deletePost(post.id)">🗑️ Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button routerLink="/posts" class="back-btn">
+    🔙 Back to Posts List
+  </button>
+</div>

@@ -1,0 +1,121 @@
+<h2 class="text-center mb-4">📚 Liste des posts</h2>
+
+<div class="container">
+
+  <!-- 🔍 Barre de recherche -->
+  <div class="input-group mb-4">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Rechercher par titre ou contenu..."
+      [(ngModel)]="searchQuery"
+      (input)="searchPosts()"
+    />
+    <button class="btn btn-outline-secondary" (click)="searchPosts()">
+      🔍 Rechercher
+    </button>
+  </div>
+
+  <!-- 🧾 Grille de posts -->
+  <div class="row g-4">
+    <div class="col-12 col-md-6 col-lg-4" *ngFor="let post of filteredPosts">
+      <div class="card h-100 shadow-sm border-light">
+        <div class="card-body d-flex flex-column">
+
+          <!-- 🖼️ Image -->
+          <div class="mb-3 text-center">
+            <img
+              [src]="post.imageUrl || 'assets/images/default.jpg'"
+              alt="Image"
+              class="img-fluid rounded"
+              style="max-height: 200px; object-fit: cover;"
+            />
+          </div>
+
+          <!-- 📝 Titre -->
+          <h5 class="text-primary fw-bold">{{ post.titre }}</h5>
+
+          <!-- 📃 Contenu tronqué -->
+          <p class="mb-2" [ngStyle]="{ 'max-height': isExpanded(post.id) ? 'none' : '100px', 'overflow': 'hidden' }">
+            <strong>Contenu :</strong> {{ post.content }}
+          </p>
+
+          <button class="btn btn-link p-0 mb-2" (click)="toggleExpand(post.id)">
+            {{ isExpanded(post.id) ? '🔼 Voir moins' : '🔽 Voir plus' }}
+          </button>
+
+          <!-- 🔗 Lien externe -->
+          <p *ngIf="post.link">
+            <strong>Lien :</strong>
+            <a [href]="post.link" target="_blank">{{ post.link }}</a>
+          </p>
+
+          <!-- 👤 Auteur -->
+          <p>
+            <strong>Auteur :</strong>
+            <span *ngIf="post.etudiant">{{ post.etudiant.name }} (Étudiant)</span>
+            <span *ngIf="post.enseignant">{{ post.enseignant.name }} (Enseignant)</span>
+          </p>
+
+          <!-- ✅ Approbation -->
+          <p *ngIf="post.isApproved" class="text-success fw-bold">✅ Approuvé</p>
+
+          <!-- Étoiles -->
+          <div *ngIf="post.rating >= 0" class="mb-3">
+            <label class="rating">
+              <span 
+                *ngFor="let star of [1, 2, 3, 4, 5]" 
+                [class.filled]="star <= post.rating"
+                (click)="updatePostRating(post.id, star)" 
+                class="star"
+              >
+                &#9733;
+              </span>
+            </label>
+          </div>
+
+          <!-- 👍👎 Likes / Dislikes -->
+          <div class="d-flex gap-2 mb-3">
+            <button class="btn btn-outline-success btn-sm flex-fill" (click)="likePost(post.id)">
+              👍 J'aime ({{ post.likeCount }})
+            </button>
+            <button class="btn btn-outline-danger btn-sm flex-fill" (click)="dislikePost(post.id)">
+              👎 Je n'aime pas ({{ post.dislikeCount }})
+            </button>
+          </div>
+
+          <!-- 🛠️ Actions -->
+          <div class="d-flex flex-wrap gap-2 mb-2">
+            <button (click)="deletePost(post.id)" class="btn btn-danger btn-sm flex-grow-1">
+              🗑️ Supprimer
+            </button>
+            <button [routerLink]="['/edit', post.id]" class="btn btn-warning btn-sm flex-grow-1">
+              ✏️ Modifier
+            </button>
+            <button (click)="viewDetails(post.id)" class="btn btn-info btn-sm flex-grow-1">
+              👁️ Détails
+            </button>
+          </div>
+
+          <!-- 💬 Commentaires -->
+          <div class="mt-2">
+            <app-commentaire [postId]="post.id"></app-commentaire>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ➕ Ajouter un post -->
+  <div class="text-center mt-4">
+    <button routerLink="/add-post" class="btn btn-primary">
+      ➕ Ajouter un nouveau post
+    </button>
+  </div>
+  <button routerLink="/admin/dashboard" class="go-dashboard-btn">
+    🛠️ Aller au Dashboard Admin
+  </button>
+  
+
+</div>

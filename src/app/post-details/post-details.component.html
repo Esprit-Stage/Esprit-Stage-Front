@@ -1,0 +1,95 @@
+<div *ngIf="post" class="container my-5">
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h2 class="card-title mb-0">📝 Détails du post</h2>
+      <span *ngIf="post.isApproved" class="badge bg-success fs-6">✅ Approuvé</span>
+    </div>
+
+    <div class="card-body">
+      <!-- Titre du post -->
+      <h3 class="card-title mb-3"><strong>Titre :</strong>{{ post.titre }}</h3>
+
+      <!-- Contenu -->
+      <p class="card-text"><strong>Contenu :</strong> {{ post.content }}</p>
+
+      <!-- Date -->
+      <p class="card-text"><strong>Date :</strong> {{ post.timestamp | date: 'medium' }}</p>
+
+      <!-- Image -->
+      <div *ngIf="post.imageUrl" class="mb-3">
+        <strong>Image :</strong>
+        <img [src]="post.imageUrl" alt="Image du post" class="img-fluid rounded shadow-sm mt-2">
+      </div>
+
+      <!-- Lien -->
+      <p *ngIf="post.link" class="card-text">
+        <strong>Lien :</strong>
+        <a [href]="post.link" target="_blank" class="btn btn-outline-primary btn-sm">{{ post.link }}</a>
+      </p>
+
+      <!-- Auteur -->
+      <p class="card-text">
+        <strong>Auteur :</strong>
+        <span *ngIf="post.etudiant" class="badge bg-success">{{ post.etudiant.name }} (Étudiant)</span>
+        <span *ngIf="post.enseignant" class="badge bg-warning text-dark">{{ post.enseignant.name }} (Enseignant)</span>
+      </p>
+
+      <!-- Like / Dislike -->
+      <div class="mt-3">
+        <button class="btn btn-light btn-sm" (click)="likePost(post.id)">
+          <i class="bi bi-hand-thumbs-up"></i> J'aime
+        </button>
+        <button class="btn btn-light btn-sm" (click)="dislikePost(post.id)">
+          <i class="bi bi-hand-thumbs-down"></i> Je n'aime pas
+        </button>
+      </div>
+      <!-- Affichage du nombre de likes et dislikes -->
+      <div class="mt-2">
+        <p><strong>Likes :</strong> {{ post.likeCount }}</p>
+        <p><strong>Dislikes :</strong> {{ post.dislikeCount }}</p>
+      </div>
+
+      <!-- Commentaires -->
+      <div class="mt-5">
+        <h4>💬 Commentaires</h4>
+
+        <ul *ngIf="comments.length > 0" class="list-group mt-3">
+          <li *ngFor="let comment of comments" class="list-group-item">
+            <div *ngIf="commentToEditId !== comment.id">
+              <p class="mb-1">{{ comment.content }}</p>
+              <small class="text-muted">Posté le {{ comment.timestamp | date: 'medium' }}</small>
+
+              <div class="d-flex justify-content-end gap-2 mt-2">
+                <button class="btn btn-outline-warning btn-sm" (click)="editComment(comment.id, comment.content)">✏️ Modifier</button>
+                <button class="btn btn-outline-danger btn-sm" (click)="deleteComment(comment.id)">🗑 Supprimer</button>
+              </div>
+            </div>
+
+            <!-- Bloc d'édition -->
+            <div *ngIf="comment.id === commentToEditId" class="mt-3">
+              <textarea [(ngModel)]="editContent" class="form-control" rows="3" placeholder="Modifier le commentaire..."></textarea>
+              <div class="d-flex justify-content-end gap-2 mt-2">
+                <button class="btn btn-success btn-sm" (click)="saveEditedComment()">💾 Enregistrer</button>
+                <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">❌ Annuler</button>
+              </div>
+            </div>
+          </li>
+        </ul>
+
+        <p *ngIf="comments.length === 0" class="text-muted mt-3">Aucun commentaire pour ce post.</p>
+      </div>
+
+      <!-- Ajouter un commentaire -->
+      <div class="mt-4">
+        <h5>➕ Ajouter un commentaire</h5>
+        <textarea [(ngModel)]="content" class="form-control" rows="3" placeholder="Écrivez votre commentaire..."></textarea>
+        <button class="btn btn-accent mt-2" (click)="addComment(post.id)">📩 Envoyer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Retour -->
+  <div class="mt-4 text-start">
+    <button class="btn btn-outline-secondary" (click)="goBackToList()">← Retour à la liste des posts</button>
+  </div>
+</div>
